@@ -114,19 +114,17 @@ const handleAuthSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setErrorMessage(null);
 
     try {
-      const payload = isRegister
-        ? {
+      const response = isRegister
+        ? await authApi.register({
             fullName: registerForm.fullName.trim(),
             email: registerForm.email.trim().toLowerCase(),
             password: registerForm.password,
             roles: registerForm.roles,
-          }
-        : {
+          })
+        : await authApi.login({
             email: loginForm.email.trim().toLowerCase(),
             password: loginForm.password,
-          };
-
-      const response = isRegister ? await authApi.register(payload) : await authApi.login(payload);
+          });
       setAccessToken(response.accessToken);
       setUser(response.user);
       setStatusMessage(isRegister ? "Registration complete!" : "Logged in successfully.");
